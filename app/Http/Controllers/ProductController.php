@@ -4,10 +4,11 @@ namespace App\Http\Controllers;
 
 use App\Product;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Gate;
 use App\Http\Resources\ProductResource;
+use Illuminate\Support\Facades\Storage;
 use App\Http\Requests\ProductCreateRequest;
 use App\Http\Requests\ProductUpdateRequest;
-use Illuminate\Support\Facades\Storage;
 use Symfony\Component\HttpFoundation\Response;
 
 class ProductController extends Controller
@@ -19,6 +20,7 @@ class ProductController extends Controller
      */
     public function index()
     {
+        Gate::authorize('view', 'products');
         return ProductResource::collection(Product::paginate());
     }
 
@@ -30,6 +32,7 @@ class ProductController extends Controller
      */
     public function store(ProductCreateRequest $request)
     {
+        Gate::authorize('edit', 'products');
         $fileName = md5(time()).'.'.$request->file('image')->extension();
 
         $url = Storage::disk('public')->putFileAs('images',$request->file('image'), $fileName);
@@ -47,6 +50,7 @@ class ProductController extends Controller
      */
     public function show(Product $product)
     {
+        Gate::authorize('view', 'products');
         return new ProductResource($product);
     }
 
@@ -59,6 +63,7 @@ class ProductController extends Controller
      */
     public function update(ProductUpdateRequest $request, Product $product)
     {
+        Gate::authorize('edit', 'products');
         $data = $request->except('image');
         if($request->hasFile('image')){
             $fileName = md5(time()).'.'.$request->file('image')->extension();
@@ -79,6 +84,7 @@ class ProductController extends Controller
      */
     public function destroy(Product $product)
     {
+        Gate::authorize('view', 'products');
         return response(null, Response::HTTP_NO_CONTENT);
     }
 }

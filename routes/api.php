@@ -25,6 +25,7 @@ Route::post('/register', 'AuthController@register');
 Route::group(['middleware'=>'auth:api'], function(){
     Route::apiResource('users', 'UserController');
     Route::apiResource('roles', 'RoleController');
+    Route::apiResource('permissions', 'PermissionController')->only('index');
     Route::apiResource('products', 'ProductController');
     Route::apiResource('orders', 'OrderController')->only(['index', 'show']);
     Route::get('export-orders', 'OrderController@export');
@@ -32,5 +33,6 @@ Route::group(['middleware'=>'auth:api'], function(){
     Route::get('/user', 'UserController@user');
     Route::put('/info', 'UserController@updateInfo');
     Route::put('/password', 'UserController@updatePassword');
+    Route::get('/chart', 'DashboardController@chart');
 });
 

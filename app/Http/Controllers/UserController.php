@@ -9,6 +9,7 @@ use App\Http\Requests\UserUpdateRequest;
 use App\Http\Requests\UpdatePasswordRequest;
 use App\Http\Requests\UpdateUserInfoRequest;
 use App\Http\Resources\UserResource;
+use Illuminate\Support\Facades\Gate;
 use Symfony\Component\HttpFoundation\Response;
 
 class UserController extends Controller
@@ -20,6 +21,7 @@ class UserController extends Controller
      */
     public function index()
     {
+        Gate::authorize('view', 'users');
         $users = User::with(['role'])->paginate();
 
         return UserResource::collection($users);
@@ -46,6 +48,7 @@ class UserController extends Controller
      */
     public function show(User $user)
     {
+        Gate::authorize('view', 'users');
         return new UserResource($user);
     }
 
@@ -58,6 +61,7 @@ class UserController extends Controller
      */
     public function update(UserUpdateRequest $request, User $user)
     {
+        Gate::authorize('edit', 'users');
         $user->update($request->except('password'));
 
         return response(new UserResource($user), Response::HTTP_ACCEPTED);
@@ -71,6 +75,7 @@ class UserController extends Controller
      */
     public function destroy(User $user)
     {
+        Gate::authorize('edit', 'users');
         $user->delete();
     }
 
@@ -83,7 +88,9 @@ class UserController extends Controller
      */
     public function user()
     {
-        return new UserResource(auth()->user());
+        return (new UserResource(auth()->user()))->additional([
+            'permissions'   =>  auth()->user()->permissions,
+        ]);
     }
 
 
