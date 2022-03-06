@@ -4,8 +4,36 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
+
+ /**
+ * @OA\Schema(
+ *      title="Update Auth User password",
+ *      description="Update Auth User password request body data",
+ * )
+ */
 class UpdatePasswordRequest extends FormRequest
 {
+
+     /**
+     * @OA\Property(
+     *  title="password"
+     * )
+     *
+     * @var string
+     */
+
+
+    public $password;
+     /**
+     * @OA\Property(
+     *  title="password_confirmation"
+     * )
+     *
+     * @var string
+     */
+    public $password_confirmation;
+
+
     /**
      * Determine if the user is authorized to make this request.
      *

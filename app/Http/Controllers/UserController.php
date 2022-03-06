@@ -14,6 +14,32 @@ use Symfony\Component\HttpFoundation\Response;
 
 class UserController extends Controller
 {
+/**
+ * @OA\Get(path="/users",
+ *  security={{"bearerAuth": {}}},
+ *  tags={"Users"},
+ *  @OA\Response(response="200",
+ *   description="User Collection"
+ *  ),
+ * @OA\Parameter(
+ *      name="page",
+ *      description="Pagination Page",
+ *      in="query",
+ *      @OA\Schema(
+ *          type="integer"
+ *      )
+ *  ),
+ * @OA\Parameter(
+ *      name="per_page",
+ *      description="Item Per Page",
+ *      in="query",
+ *      @OA\Schema(
+ *          type="integer"
+ *      )
+ *  )
+ * )
+ */
+
     /**
      * Display a listing of the resource.
      *
@@ -26,6 +52,22 @@ class UserController extends Controller
 
         return UserResource::collection($users);
     }
+
+
+/**
+ * @OA\Post(
+ *  path="/users",
+ *  security={{"bearerAuth": {}}},
+ * tags={"Users"},
+ *  @OA\Response(response="200",
+ *   description="Create New User"
+ *  ),
+ * @OA\RequestBody(
+ *      required=true,
+ *      @OA\JsonContent(ref="#/components/schemas/UserCreateRequest")
+ *    )
+ * )
+ */
 
     /**
      * Store a newly created resource in storage.
@@ -40,6 +82,26 @@ class UserController extends Controller
         return response(new UserResource($user), Response::HTTP_CREATED);
     }
 
+
+/**
+ * @OA\Get(path="/users/{id}",
+ *  security={{"bearerAuth": {}}},
+ * tags={"Users"},
+ *  @OA\Response(response="201",
+ *   description="User"
+ *  ),
+ * @OA\Parameter(
+ *      name="id",
+ *      description="User ID",
+ *      in="path",
+ *      required=true,
+ *      @OA\Schema(
+ *          type="integer"
+ *      )
+ *  )
+ * )
+ */
+
     /**
      * Display the specified resource.
      *
@@ -52,6 +114,34 @@ class UserController extends Controller
         return new UserResource($user);
     }
 
+
+
+
+    /**
+ * @OA\Put(
+ *  path="/users/{id}",
+ *  security={{"bearerAuth": {}}},
+ * tags={"Users"},
+ *  @OA\Response(response="202",
+ *   description="Update user"
+ *  ),
+ *
+ *  @OA\Parameter(
+ *      name="id",
+ *      description="User Id",
+ *      in="path",
+ *      required=true,
+ *      @OA\Schema(
+ *          type="integer"
+ *      )
+ *  ),
+ *
+ * @OA\RequestBody(
+ *      required=true,
+ *      @OA\JsonContent(ref="#/components/schemas/UserUpdateRequest")
+ *    )
+ * )
+ */
     /**
      * Update the specified resource in storage.
      *
@@ -67,6 +157,31 @@ class UserController extends Controller
         return response(new UserResource($user), Response::HTTP_ACCEPTED);
     }
 
+
+
+
+
+
+/**
+ * @OA\Delete(
+ *  path="/users/{id}",
+ *  security={{"bearerAuth": {}}},
+ * tags={"Users"},
+ *  @OA\Response(response="204",
+ *   description="Delete user"
+ *  ),
+ *  @OA\Parameter(
+ *      name="id",
+ *      description="User Id",
+ *      in="path",
+ *      required=true,
+ *      @OA\Schema(
+ *          type="integer"
+ *      )
+ *  ),
+ * )
+ */
+
     /**
      * Remove the specified resource from storage.
      *
@@ -77,9 +192,22 @@ class UserController extends Controller
     {
         Gate::authorize('edit', 'users');
         $user->delete();
+
+        return response(null, Response::HTTP_NO_CONTENT);
     }
 
 
+
+
+/**
+ * @OA\Get(path="/user",
+ *  security={{"bearerAuth": {}}},
+ *  tags={"Profile"},
+ *  @OA\Response(response="200",
+ *   description="Get current authenticated user information"
+ *  ),
+ * )
+ */
 
     /**
      * Get currently authenticated user information
@@ -94,6 +222,23 @@ class UserController extends Controller
     }
 
 
+
+/**
+ * @OA\Put(
+ *  path="/info",
+ *  security={{"bearerAuth": {}}},
+ * tags={"Profile"},
+ *  @OA\Response(response="202",
+ *   description="Update authenticated user information"
+ *  ),
+ *
+ *
+ * @OA\RequestBody(
+ *      required=true,
+ *      @OA\JsonContent(ref="#/components/schemas/UpdateUserInfoRequest")
+ *    )
+ * )
+ */
 
     /**
      * Update currently authenticated user information
@@ -110,6 +255,26 @@ class UserController extends Controller
     }
 
 
+
+
+
+
+/**
+ * @OA\Put(
+ *  path="/password",
+ *  security={{"bearerAuth": {}}},
+ * tags={"Profile"},
+ *  @OA\Response(response="202",
+ *   description="Update authenticated user password"
+ *  ),
+ *
+ *
+ * @OA\RequestBody(
+ *      required=true,
+ *      @OA\JsonContent(ref="#/components/schemas/UpdatePasswordRequest")
+ *    )
+ * )
+ */
 
 
     /**
